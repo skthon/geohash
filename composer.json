@@ -2,7 +2,7 @@
     "name": "ImSaikiran/Geohash",
     "description": "Geohash Algorithm to encode geographic coordinates to a string of letters and digits",
     "license": "MIT",
-    "keywords": ["geohash", "php", "library", "composer package", "coordinates"],
+    "keywords": ["geohash", "php"],
     "authors": [
         {
             "name": "Saikiran Ch",
