@@ -1,0 +1,21 @@
+{
+    "name": "ImSaikiran/Geohash",
+    "description": "Geohash Algorithm to encode geographic coordinates to a string of letters and digits",
+    "license": "MIT",
+    "keywords": ["geohash", "php", "library", "composer package", "coordinates"],
+    "authors": [
+        {
+            "name": "Saikiran Ch",
+            "email": "saikiranchavan@gmail.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "4.0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "ImSaikiran\\Geohash\\": "src"
+        }
+    }
+}
