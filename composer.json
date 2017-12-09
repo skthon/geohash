@@ -3,6 +3,7 @@
     "description": "Geohash Algorithm to encode geographic coordinates to a string of letters and digits",
     "license": "MIT",
     "keywords": ["geohash", "php"],
+    "homepage" : "https://github.com/ImSaikiran/Geohash",
     "authors": [
         {
             "name": "Saikiran Ch",
