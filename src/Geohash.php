@@ -73,8 +73,8 @@ class Geohash
         // Convert the binary to hash
         $hash = "";
         for ($i=0; $i< strlen($binaryString); $i+=5) {
-                $n = bindec(substr($binaryString,$i,5));
-                $hash = $hash.$this->base32Mapping[$n];
+            $n = bindec(substr($binaryString,$i,5));
+            $hash = $hash.$this->base32Mapping[$n];
         }
         return $hash;
     }
@@ -99,8 +99,7 @@ class Geohash
         for ($i = 0; $i < $binaryLength; $i++) {
             ($i % 2 == 0) ? ($lonbits .= $latlonbits[$i]) : ($latbits .= $latlonbits[$i]);
         }
-        echo $latbits;
-        echo "\n ". $lonbits . "\n";
+
         // Get the Coordinates
         $latitude = $this->getCoordinate(-90, 90, $latbits);
         $longitude = $this->getCoordinate(-180, 180, $lonbits);
