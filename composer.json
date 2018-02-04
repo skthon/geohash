@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "ImSaikiran\\Geohash\\": "src"
+            "Sk\\Geohash\\": "src"
         }
     }
 }

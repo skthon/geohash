@@ -1,9 +1,9 @@
 <?php
 
-namespace ImSaikiran\Geohash;
+namespace Sk\Geohash;
 
 /**
- * @author  SaikiranCh <saikiranchavan@gmail.com>
+ * @author  Saikiran Ch <saikiranchavan@gmail.com>
  * @class   Geohash
  * @description  Algorithm to encode geographic coordinates to a string of letters and digits
  */
@@ -15,52 +15,30 @@ class Geohash
     protected $base32Mapping = "0123456789bcdefghjkmnpqrstuvwxyz";
 
     /**
-     * Decodes geohash from base 32
-     * @param  string  Geohash
-     * @return string  Binary String
-     */
-     public function characterMapping($geohash) {
-        $geohashArray = array();
-
-        for ($i=0; $i < strlen($geohash); $i++) {
-            $geohashArray[] = $geohash[$i];
-        }
-
-        $r = "";
-        foreach($geohashArray as $g) {
-            if (($position = stripos($this->base32Mapping, $g)) !== FALSE) {
-                $r .= str_pad(decbin($position), 5, "0", STR_PAD_LEFT);
-            } else {
-                $r .= "00000";  
-            }
-        }
-        return $r;
-     }
-
-    /**
      * Encode the latitude and longitude into a hashed string
      * @param  float   Latitude
      * @param  float   longitude
      * @param  int     GeohashLength
      * @return string  Hashed string obtained from the coordinates
      */
-    public function encode($latitude, $Longitude, $geohashLength = 5) {
-        // Get latitude and longitude bits length from $geohashLength
-        if ($geohashLength%2 == 0) {
+    public function encode($latitude, $Longitude, $geohashLength = 5)
+    {
+        // Get latitude and longitude bits length from given geohash Length
+        if ($geohashLength % 2 == 0) {
             $latBitsLength = $lonBitsLength = ($geohashLength/2) * 5;
         } else {
-            $latBitsLength = (ceil($geohashLength/2)*5) - 3;
+            $latBitsLength = (ceil($geohashLength / 2) * 5) - 3;
             $lonBitsLength = $latBitsLength + 1;
         }
 
-        // Get the latitude and longitude binary bits
+        // Convert the coordinates into binary format
         $binaryString = "";
         $latbits = $this->getBits($latitude, -90, 90, $latBitsLength);
         $lonbits = $this->getBits($Longitude, -180, 180, $lonBitsLength);
         $binaryLength = strlen($latbits) + strlen($lonbits);
 
         // Combine the lat and lon bits and get the binaryString
-        for ($i=1 ; $i < $binaryLength+1; $i++) {
+        for ($i=1 ; $i < $binaryLength + 1; $i++) {
             if ($i%2 == 0) {
                 $pos = (int)($i-2)/2;
                 $binaryString .= $latbits[$pos];
@@ -74,7 +52,7 @@ class Geohash
         $hash = "";
         for ($i=0; $i< strlen($binaryString); $i+=5) {
             $n = bindec(substr($binaryString,$i,5));
-            $hash = $hash.$this->base32Mapping[$n];
+            $hash = $hash . $this->base32Mapping[$n];
         }
         return $hash;
     }
@@ -85,14 +63,23 @@ class Geohash
      * @param   double  Percentage error
      * @return  mixed   Array of Latitude and Longitude
      */
-    public function decode($hash, $error = false) {
-        $hashlength = strlen($hash);
+    public function decode($hash, $error = false)
+    {
+        $hashLength = strlen($hash);
         $latlonbits = base_convert($hash, 32, 2);
         $binaryLength = strlen($latlonbits);
         $latbits = "";
         $lonbits = "";
 
-        $latlonbits = $this->characterMapping($hash);
+        $geohashArray = str_split($hash, 1);
+        $latlonbits = "";
+        foreach($geohashArray as $g) {
+            if (($position = stripos($this->base32Mapping, $g)) !== FALSE) {
+                $latlonbits .= str_pad(decbin($position), 5, "0", STR_PAD_LEFT);
+            } else {
+                $latlonbits .= "00000";
+            }
+        }
 
         // Even bits take latitude Code
         // Odd bits take longitude Code
@@ -103,6 +90,10 @@ class Geohash
         // Get the Coordinates
         $latitude = $this->getCoordinate(-90, 90, $latbits);
         $longitude = $this->getCoordinate(-180, 180, $lonbits);
+
+        // Rounding the latitude and longitude values
+        $latitude = round($latitude, $hashLength - 2);
+        $longitude = round($longitude, $hashLength - 2);
         return array($latitude, $longitude);
     }
 
@@ -113,9 +104,10 @@ class Geohash
      * @param  string  $binaryString
      * @return float   $coordinate   
      */
-    public function getCoordinate($min, $max, $binaryString) {
+    public function getCoordinate($min, $max, $binaryString)
+    {
         $error = 0;
-        for ($i=0; $i < strlen($binaryString); $i++) { 
+        for ($i = 0; $i < strlen($binaryString); $i++) { 
             $mid = ($min + $max)/2 ;
             if ($binaryString[$i] == 1){
                 $min = $mid ;
@@ -136,7 +128,8 @@ class Geohash
      * @param  int     bitslength
      * @return string  binary string for the given coordinate
      */
-    public function getBits($coordinate, $min, $max, $bitsLength) {
+    public function getBits($coordinate, $min, $max, $bitsLength)
+    {
         $binaryString = "";
         $i = 0;
         while ($bitsLength > $i) {
