@@ -41,6 +41,22 @@ The result is
 latitude : 17.38,  longitude : 78.42
 ~~~
 
+Get geohashes of 8 neighbors of a geohash
+~~~
+use Sk\Geohash\Geohash;
+
+$g = new Geohash();
+$hash = $g->encode(25.813646, -80.133761, 7);
+$neighbors = $g->getNeighbors($hash);
+echo "Hash: $hash\n";
+echo "Neighbors: " . json_encode($neighors) . "\n";
+~~~
+The result is
+~~~
+Hash: 
+Neighbors: {"North":"dhx4be2","East":"dhx4be1","South":"dhx4bdb","West":"dhx4b7p","NorthEast":"dhx4be3","SouthEast":"dhx4bdc","SouthWest":"dhx4b6z","NorthWest":"dhx4b7r"}
+~~~
+
 Running the unit tests
 -------
 Go to this directory from your project folder

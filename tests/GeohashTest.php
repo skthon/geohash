@@ -1,8 +1,9 @@
 <?php
- 
+
+use PHPUnit\Framework\TestCase;
 use Sk\Geohash\Geohash;
  
-class GeohashTest extends PHPUnit_Framework_TestCase
+class GeohashTest extends TestCase
 {
     /**
      * @dataProvider encodeProvider
@@ -55,5 +56,23 @@ class GeohashTest extends PHPUnit_Framework_TestCase
             array(17.385032102, 78.486720398, "tepffhb71hu"),
             array(17.3850320186, 78.48672056569, "tepffhb71hue")
         );
+    }
+
+    public function testGetNeighbors() {
+        $geohash = new Geohash();
+        list($lat1, $lon1) = [25.813646, -80.133761];
+        $hash = $geohash->encode($lat1, $lon1, 7);
+        $neighbors = $geohash->getNeighbors($hash);
+        $this->assertEquals('dhx4be0', $hash);
+        $this->assertEquals([
+            'North' => 'dhx4be2',
+            'East'=> 'dhx4be1',
+            'South' => 'dhx4bdb',
+            'West' => 'dhx4b7p',
+            'NorthEast' => 'dhx4be3',
+            'SouthEast' => 'dhx4bdc',
+            'SouthWest' => 'dhx4b6z',
+            'NorthWest' => 'dhx4b7r',
+        ], $neighbors);
     }
 }

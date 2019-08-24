@@ -9,10 +9,52 @@ namespace Sk\Geohash;
  */
 class Geohash
 {
+    const NORTH = 0;
+    const EAST = 1;
+    const SOUTH = 2;
+    const WEST = 3;
+
+    const EVEN = 0;
+    const ODD = 1;
+
     /**
      * Used for decoding the hash from base32
      */
     protected $base32Mapping = "0123456789bcdefghjkmnpqrstuvwxyz";
+
+    private $borderChars = [
+        self::EVEN => [
+            self::NORTH => 'bcfguvyz',
+            self::EAST => 'prxz',
+            self::SOUTH => '0145hjnp',
+            self::WEST => '028b',
+        ]
+    ];
+
+    private $neighborChars = [
+        self::EVEN => [
+            self::NORTH => '238967debc01fg45kmstqrwxuvhjyznp',
+            self::EAST => '14365h7k9dcfesgujnmqp0r2twvyx8zb',
+            self::SOUTH => 'bc01fg45238967deuvhjyznpkmstqrwx',
+            self::WEST => 'p0r21436x8zb9dcf5h7kjnmqesgutwvy',
+        ],
+    ];
+
+    public function __construct() {
+        $this->neighborChars[self::ODD] = array(
+            self::NORTH => $this->neighborChars[self::EVEN][self::EAST],
+            self::EAST => $this->neighborChars[self::EVEN][self::NORTH],
+            self::SOUTH => $this->neighborChars[self::EVEN][self::WEST],
+            self::WEST => $this->neighborChars[self::EVEN][self::SOUTH],
+        );
+
+        $this->borderChars[self::ODD] = array(
+            self::NORTH => $this->borderChars[self::EVEN][self::EAST],
+            self::EAST => $this->borderChars[self::EVEN][self::NORTH],
+            self::SOUTH => $this->borderChars[self::EVEN][self::WEST],
+            self::WEST => $this->borderChars[self::EVEN][self::SOUTH],
+        );
+    }
 
     /**
      * Encode the latitude and longitude into a hashed string
@@ -144,5 +186,58 @@ class Geohash
             $i++;
         }
         return $binaryString;
+    }
+
+    /**
+     * Computes neighboring geohash values for given geohash.
+     *
+     * @param string $hash
+     * @return array
+     */
+    public function getNeighbors($hash) {
+        $hashNorth = $this->calculateNeighbor($hash, self::NORTH);
+        $hashEast = $this->calculateNeighbor($hash, self::EAST);
+        $hashSouth = $this->calculateNeighbor($hash, self::SOUTH);
+        $hashWest = $this->calculateNeighbor($hash, self::WEST);
+
+        $hashNorthEast = $this->calculateNeighbor($hashNorth, self::EAST);
+        $hashSouthEast = $this->calculateNeighbor($hashSouth, self::EAST);
+        $hashSouthWest = $this->calculateNeighbor($hashSouth, self::WEST);
+        $hashNorthWest = $this->calculateNeighbor($hashNorth, self::WEST);
+        return [
+            'North'     => $hashNorth,
+            'East'      => $hashEast,
+            'South'     => $hashSouth,
+            'West'      => $hashWest,
+            'NorthEast' => $hashNorthEast,
+            'SouthEast' => $hashSouthEast,
+            'SouthWest' => $hashSouthWest,
+            'NorthWest' => $hashNorthWest,
+        ];
+    }
+
+    /**
+     * Calculates neighbor geohash for given geohash and direction
+     *
+     * @param string $hash
+     * @param string $direction
+     * @return string $neighborHash
+     */
+    private function calculateNeighbor($hash, $direction) {
+        $length = strlen($hash);
+        if ($length == 0) {
+            return '';
+        }
+        $lastChar = $hash{$length - 1};
+        $evenOrOdd = ($length - 1) % 2;
+        $baseHash = substr($hash, 0, -1);
+        if (strpos($this->borderChars[$evenOrOdd][$direction], $lastChar) !== false) {
+            $baseHash = $this->calculateNeighbor($baseHash, $direction);
+        }
+        if (isset($baseHash{0})) {
+            return $baseHash . $this->neighborChars[$evenOrOdd][$direction]{strpos($this->base32Mapping, $lastChar)};
+        } else {
+            return '';
+        }
     }
 }
