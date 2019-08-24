@@ -4,13 +4,14 @@ Geohash
 Geohash is a php module that provides below functions.
 * Encoding geographic location into short string of letters and digits.
 * Decoding string of letters and digits to latitude and longitude.
+* Identifying the neighbouring geohashes of a provided geohash.
 
 Installation
 -------
 
 The easiest way to install PHP Geohash is with [composer](https://getcomposer.org). Find it on [Packagist](https://packagist.org/packages/saikiran/geohash).
 ~~~
-$ composer require saikiran/geohash:0.9
+$ composer require saikiran/geohash:1.0
 ~~~
 
 Usage
@@ -49,7 +50,7 @@ $g = new Geohash();
 $hash = $g->encode(25.813646, -80.133761, 7);
 $neighbors = $g->getNeighbors($hash);
 echo "Hash: $hash\n";
-echo "Neighbors: " . json_encode($neighors) . "\n";
+echo "Neighbors: " . json_encode($neighbors) . "\n";
 ~~~
 The result is
 ~~~
