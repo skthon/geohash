@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use Sk\Geohash\Geohash;
- 
+
 class GeohashTest extends TestCase
 {
     /**
@@ -73,6 +73,54 @@ class GeohashTest extends TestCase
             'SouthEast' => 'dhx4bdc',
             'SouthWest' => 'dhx4b6z',
             'NorthWest' => 'dhx4b7r',
+        ], $neighbors);
+    }
+
+    public function testGetNeighborsGeohash12() {
+        $geohash = new Geohash();
+        $hash = '7j2r6k4z6xtv';
+        $neighbors = $geohash->getNeighbors($hash);
+        $this->assertEquals([
+            'North' => '7j2r6k4z6xty',
+            'East'=> '7j2r6k4z6xwj',
+            'South' => '7j2r6k4z6xtu',
+            'West' => '7j2r6k4z6xtt',
+            'NorthEast' => '7j2r6k4z6xwn',
+            'SouthEast' => '7j2r6k4z6xwh',
+            'SouthWest' => '7j2r6k4z6xts',
+            'NorthWest' => '7j2r6k4z6xtw',
+        ], $neighbors);
+    }
+
+    public function testGetNeighborsGeohash_7j2() {
+        $geohash = new Geohash();
+        $hash = '7j2';
+        $neighbors = $geohash->getNeighbors($hash);
+        $this->assertEquals([
+            'North' => '7j8',
+            'East'=> '7j3',
+            'South' => '7j0',
+            'West' => '6vr',
+            'NorthEast' => '7j9',
+            'SouthEast' => '7j1',
+            'SouthWest' => '6vp',
+            'NorthWest' => '6vx',
+        ], $neighbors);
+    }
+
+    public function testGetNeighborsGeohash_g00() {
+        $geohash = new Geohash();
+        $hash = 'g00';
+        $neighbors = $geohash->getNeighbors($hash);
+        $this->assertEquals([
+            'North' => 'g02',
+            'East'=> 'g01',
+            'South' => 'epb',
+            'West' => 'fbp',
+            'NorthEast' => 'g03',
+            'SouthEast' => 'epc',
+            'SouthWest' => 'dzz',
+            'NorthWest' => 'fbr',
         ], $neighbors);
     }
 }
