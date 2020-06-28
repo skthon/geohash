@@ -144,12 +144,12 @@ class Geohash
      * @param  float   $min
      * @param  float   $max
      * @param  string  $binaryString
-     * @return float   $coordinate   
+     * @return float   $coordinate
      */
     public function getCoordinate($min, $max, $binaryString)
     {
         $error = 0;
-        for ($i = 0; $i < strlen($binaryString); $i++) { 
+        for ($i = 0; $i < strlen($binaryString); $i++) {
             $mid = ($min + $max)/2 ;
             if ($binaryString[$i] == 1){
                 $min = $mid ;
@@ -228,14 +228,14 @@ class Geohash
         if ($length == 0) {
             return '';
         }
-        $lastChar = $hash{$length - 1};
+        $lastChar = $hash[$length - 1];
         $evenOrOdd = ($length - 1) % 2;
         $baseHash = substr($hash, 0, -1);
         if (strpos($this->borderChars[$evenOrOdd][$direction], $lastChar) !== false) {
             $baseHash = $this->calculateNeighbor($baseHash, $direction);
         }
-        if (isset($baseHash{0})) {
-            return $baseHash . $this->neighborChars[$evenOrOdd][$direction]{strpos($this->base32Mapping, $lastChar)};
+        if (isset($baseHash[0])) {
+            return $baseHash . $this->neighborChars[$evenOrOdd][$direction][strpos($this->base32Mapping, $lastChar)];
         } else {
             return '';
         }
