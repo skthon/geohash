@@ -11,7 +11,7 @@ Installation
 
 The easiest way to install PHP Geohash is with [composer](https://getcomposer.org). Find it on [Packagist](https://packagist.org/packages/saikiran/geohash).
 ~~~
-$ composer require saikiran/geohash:1.0
+$ composer require saikiran/geohash
 ~~~
 
 Usage
