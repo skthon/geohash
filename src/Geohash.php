@@ -234,10 +234,6 @@ class Geohash
         if (strpos($this->borderChars[$evenOrOdd][$direction], $lastChar) !== false) {
             $baseHash = $this->calculateNeighbor($baseHash, $direction);
         }
-        if (isset($baseHash[0])) {
-            return $baseHash . $this->neighborChars[$evenOrOdd][$direction][strpos($this->base32Mapping, $lastChar)];
-        } else {
-            return '';
-        }
+        return $baseHash . $this->neighborChars[$evenOrOdd][$direction][strpos($this->base32Mapping, $lastChar)];
     }
 }
